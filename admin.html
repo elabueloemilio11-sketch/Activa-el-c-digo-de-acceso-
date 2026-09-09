@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Administración · Abuelo Emilio Academy</title>
+  <link rel="stylesheet" href="/assets/styles.css">
+  <script src="/assets/admin.js" defer></script>
+</head>
+<body>
+  <main class="admin-shell">
+    <header class="admin-header">
+      <a class="brand" href="/admin"><span class="brand-mark">A</span><span>ABUELO EMILIO <b>ADMIN</b></span></a>
+      <button id="admin-logout" class="text-button" type="button" hidden>Cerrar sesión</button>
+    </header>
+
+    <section id="admin-login" class="card auth-card compact-card">
+      <div class="eyebrow">PANEL PROTEGIDO</div>
+      <h1>Administración</h1>
+      <form id="admin-login-form">
+        <label for="admin-user">Usuario</label>
+        <input id="admin-user" autocomplete="username" required>
+        <label for="admin-password">Contraseña</label>
+        <input id="admin-password" type="password" autocomplete="current-password" required>
+        <button class="primary" type="submit">ENTRAR</button>
+      </form>
+      <p id="admin-login-message" class="message" role="status"></p>
+    </section>
+
+    <section id="admin-panel" hidden>
+      <div class="admin-toolbar">
+        <div>
+          <div class="eyebrow">LICENCIAS</div>
+          <h1>Control de accesos</h1>
+        </div>
+        <form id="admin-search-form" class="search-form">
+          <input id="admin-search" type="search" placeholder="Email u order ID">
+          <button class="secondary" type="submit">Buscar</button>
+        </form>
+      </div>
+      <p id="admin-message" class="message" role="status"></p>
+      <div class="admin-grid">
+        <section class="card table-card">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Comprador</th><th>Pedido</th><th>Estado</th><th>Disp.</th><th>Riesgo</th></tr></thead>
+              <tbody id="access-table"></tbody>
+            </table>
+          </div>
+        </section>
+        <aside id="access-detail" class="card detail-card">
+          <p class="muted">Selecciona un acceso para ver y gestionar sus dispositivos.</p>
+        </aside>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
