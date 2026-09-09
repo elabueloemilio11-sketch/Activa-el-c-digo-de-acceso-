@@ -1,4 +1,5 @@
 # yaml-language-server: $schema=https://render.com/schema/render.yaml.json
+
 services:
   - type: web
     name: abuelo-emilio-academy-access
@@ -8,52 +9,79 @@ services:
     startCommand: npm run migrate && npm start
     healthCheckPath: /health
     autoDeployTrigger: commit
+
     envVars:
+      - key: NODE_VERSION
+        value: "22.22.0"
+
       - key: NODE_ENV
         value: production
+
       - key: DATABASE_URL
         sync: false
+
       - key: APP_URL
         sync: false
+
       - key: ACADEMY_URL
         value: /academy
+
       - key: SHOPIFY_CHECKOUT_URL
         value: https://academiaemilio.myshopify.com/cart/63469093847370:1
+
       - key: SHOPIFY_STORE_DOMAIN
         value: academiaemilio.myshopify.com
+
       - key: SHOPIFY_WEBHOOK_SECRET
         sync: false
+
       - key: SHOPIFY_PRODUCT_VARIANT_IDS
         value: "63469093847370"
+
       - key: SESSION_SECRET
         generateValue: true
+
       - key: CODE_PEPPER
         generateValue: true
+
       - key: CODE_ENCRYPTION_KEY
         generateValue: true
+
       - key: EMAIL_PROVIDER
         value: resend
+
       - key: EMAIL_FROM
         sync: false
+
       - key: EMAIL_API_KEY
         sync: false
+
       - key: ADMIN_USERNAME
         value: admin
+
       - key: ADMIN_PASSWORD
         sync: false
+
       - key: MAX_DEVICES
         value: "2"
+
       - key: MAX_SESSIONS
         value: "2"
+
       - key: SESSION_TTL_DAYS
         value: "30"
+
       - key: DEVICE_TTL_DAYS
         value: "400"
+
       - key: OTP_TTL_MINUTES
         value: "10"
+
       - key: RECOVERY_TTL_MINUTES
         value: "20"
+
       - key: TRUST_PROXY
         value: "true"
+
       - key: COOKIE_DOMAIN
         sync: false
