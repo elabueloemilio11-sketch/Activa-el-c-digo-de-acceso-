@@ -14,7 +14,6 @@ jobs:
         run: |
           unzip -o 'Abuelo-Emilio-Academy-Curso-Interactivo(1).zip' -d .
           rm -f 'Abuelo-Emilio-Academy-Curso-Interactivo(1).zip'
-          rm -f '.github/workflows/unpack-upload.yml'
       - name: Commit extracted project
         run: |
           git config user.name 'github-actions[bot]'
