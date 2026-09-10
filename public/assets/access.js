@@ -15,6 +15,7 @@ function setMessage(text = '', success = false) {
 function showStep(name) {
   for (const step of steps) {
     const element = $(`#step-${step}`);
+    if (!element) continue;
     element.hidden = step !== name;
     element.classList.toggle('is-active', step === name);
   }
@@ -58,9 +59,6 @@ function formatCode(value) {
 $('#access-code').addEventListener('input', (event) => {
   event.target.value = formatCode(event.target.value);
 });
-$('#otp').addEventListener('input', (event) => {
-  event.target.value = event.target.value.replace(/\D/g, '').slice(0, 6);
-});
 
 $('#code-form').addEventListener('submit', async (event) => {
   event.preventDefault();
@@ -80,24 +78,8 @@ $('#email-form').addEventListener('submit', async (event) => {
   event.preventDefault();
   busy(event.currentTarget, true);
   try {
-    const result = await api('/api/access/verify-email', { body: { email: $('#buyer-email').value } });
-    if (result.next === 'academy') return enterAcademy(result.redirect);
-    showStep('otp');
-    setMessage(result.message, true);
-    $('#otp').focus();
-  } catch (error) {
-    setMessage(error.message);
-  } finally {
-    busy(event.currentTarget, false);
-  }
-});
-
-$('#otp-form').addEventListener('submit', async (event) => {
-  event.preventDefault();
-  busy(event.currentTarget, true);
-  try {
-    const result = await api('/api/access/verify-otp', { body: { otp: $('#otp').value } });
-    enterAcademy(result.redirect);
+    const result = await api('/api/access/direct', { body: { email: $('#buyer-email').value } });
+    return enterAcademy(result.redirect);
   } catch (error) {
     if (error.status === 409 && error.code === 'DEVICE_LIMIT') {
       showStep('devices');
@@ -108,18 +90,6 @@ $('#otp-form').addEventListener('submit', async (event) => {
     }
   } finally {
     busy(event.currentTarget, false);
-  }
-});
-
-$('#resend-otp').addEventListener('click', async (event) => {
-  event.currentTarget.disabled = true;
-  try {
-    const result = await api('/api/access/otp', { body: {} });
-    setMessage(result.message, true);
-  } catch (error) {
-    setMessage(error.message);
-  } finally {
-    event.currentTarget.disabled = false;
   }
 });
 
@@ -161,7 +131,7 @@ async function replaceDevice(deviceId, button) {
 
 function enterAcademy(path = '/academy') {
   showStep('done');
-  setTimeout(() => window.location.assign(path), 450);
+  setTimeout(() => window.location.assign(path), 250);
 }
 
 $('#lost-code').addEventListener('click', () => showStep('recover'));
