@@ -4,7 +4,9 @@
   const slider = document.getElementById('academy-music-volume');
   const status = document.getElementById('academy-music-status');
   const percent = document.getElementById('academy-music-percent');
-  if (!audio || !toggle || !slider || !status || !percent) return;
+  const control = document.getElementById('academy-music-control');
+
+  if (!audio || !toggle || !slider || !status || !percent || !control) return;
 
   const tracks = [
     { title: 'Rainy Night Jazz', src: '/assets/music/01-rainy-night-jazz.mp3' },
@@ -13,55 +15,72 @@
     { title: 'Cosmic Focus 432Hz', src: '/assets/music/04-cosmic-focus.mp3' }
   ];
 
-  const K_VOL='ae_study_music_volume', K_MUTE='ae_study_music_muted', K_TRACK='ae_study_music_track';
-  const stored = localStorage.getItem(K_VOL);
-  const savedVol = stored === null ? NaN : Number(stored);
+  const K_VOL = 'ae_study_music_volume';
+  const K_MUTE = 'ae_study_music_muted';
+  const K_TRACK = 'ae_study_music_track';
+  const K_PLAYER_VER = 'ae_study_music_player_version';
+  const PLAYER_VER = '4';
+
+  // Reset one single time to the new intended default: 10%.
+  if (localStorage.getItem(K_PLAYER_VER) !== PLAYER_VER) {
+    localStorage.setItem(K_VOL, '15');
+    localStorage.setItem(K_MUTE, '0');
+    localStorage.setItem(K_PLAYER_VER, PLAYER_VER);
+  }
+
+  const savedVol = Number(localStorage.getItem(K_VOL));
   let volume = Number.isFinite(savedVol) && savedVol >= 0 && savedVol <= 100 ? savedVol : 15;
   let muted = localStorage.getItem(K_MUTE) === '1';
   let index = Number(localStorage.getItem(K_TRACK));
   if (!Number.isInteger(index) || index < 0 || index >= tracks.length) index = 0;
+
   let unlocked = false;
 
-  const next = document.createElement('button');
-  next.type = 'button';
-  next.id = 'academy-music-next';
-  next.className = 'academy-music-next';
-  next.setAttribute('aria-label','Siguiente canción');
-  next.textContent = '›';
-  document.getElementById('academy-music-control').append(next);
+  let next = document.getElementById('academy-music-next');
+  if (!next) {
+    next = document.createElement('button');
+    next.type = 'button';
+    next.id = 'academy-music-next';
+    next.className = 'academy-music-next';
+    next.setAttribute('aria-label', 'Siguiente canción');
+    next.textContent = '›';
+    control.append(next);
+  }
 
   function paint() {
     slider.value = String(volume);
     slider.style.setProperty('--music-fill', `${volume}%`);
-    audio.volume = volume / 100;
+    audio.volume = Math.min(1, Math.max(0, volume / 100));
     audio.muted = muted;
-    percent.textContent = `${volume}%`;
+    percent.textContent = `${Math.round(volume)}%`;
 
     const silent = muted || volume === 0;
-    toggle.textContent = silent ? '♩' : '♫';
+    toggle.textContent = silent ? '♪' : '♫';
     toggle.setAttribute('aria-pressed', String(!silent));
 
-    if (silent) status.textContent = 'Música en pausa';
-    else if (audio.paused && !unlocked) status.textContent = 'Toca cualquier botón para iniciar';
-    else status.textContent = tracks[index].title;
-  }
-
-  async function tryStart() {
-    if (muted || volume === 0) return paint();
-    try {
-      await audio.play();
-      unlocked = true;
-      paint();
-    } catch {
-      status.textContent = 'Toca cualquier botón para iniciar';
+    if (silent) {
+      status.textContent = 'Música en pausa';
+    } else if (audio.paused) {
+      status.textContent = unlocked ? tracks[index].title : 'Toca un botón del curso para iniciar';
+    } else {
+      status.textContent = tracks[index].title;
     }
   }
 
-  function loadTrack(autoplay=false) {
+  async function playNow() {
+    if (muted || volume === 0) return;
+    try {
+      await audio.play();
+      unlocked = true;
+    } catch (_) {}
+    paint();
+  }
+
+  function loadTrack(autoplay = false) {
     audio.src = tracks[index].src;
     localStorage.setItem(K_TRACK, String(index));
     paint();
-    if (autoplay && !muted && volume > 0) void tryStart();
+    if (autoplay) void playNow();
   }
 
   function advance() {
@@ -69,39 +88,74 @@
     loadTrack(true);
   }
 
-  audio.addEventListener('ended', advance);
-  next.addEventListener('click', advance);
+  // Player controls: keep them independent from the global iPhone unlock gesture.
+  toggle.addEventListener('click', async (event) => {
+    event.preventDefault();
+    event.stopPropagation();
 
-  toggle.addEventListener('click', async () => {
-    muted = !muted;
-    localStorage.setItem(K_MUTE, muted ? '1' : '0');
-    if (!muted && volume === 0) {
-      volume = 15;
+    if (muted || volume === 0) {
+      muted = false;
+      if (volume === 0) volume = 15;
       localStorage.setItem(K_VOL, String(volume));
+      localStorage.setItem(K_MUTE, '0');
+      paint();
+      await playNow();
+    } else if (audio.paused) {
+      muted = false;
+      localStorage.setItem(K_MUTE, '0');
+      paint();
+      await playNow();
+    } else {
+      muted = true;
+      audio.pause();
+      localStorage.setItem(K_MUTE, '1');
+      paint();
     }
-    paint();
-    if (!muted) await tryStart();
-    else audio.pause();
   });
 
-  const onVolume = async () => {
+  next.addEventListener('click', (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    muted = false;
+    localStorage.setItem(K_MUTE, '0');
+    advance();
+  });
+
+  const changeVolume = async (event) => {
+    event.stopPropagation();
     volume = Number(slider.value);
     muted = volume === 0;
+
     localStorage.setItem(K_VOL, String(volume));
     localStorage.setItem(K_MUTE, muted ? '1' : '0');
-    paint();
-    if (!muted && audio.paused) await tryStart();
-  };
-  slider.addEventListener('input', onVolume);
-  slider.addEventListener('change', onVolume);
 
-  const unlock = () => {
-    if (!unlocked && !muted && volume > 0) void tryStart();
+    paint();
+
+    if (muted) {
+      audio.pause();
+    } else if (audio.paused && unlocked) {
+      await playNow();
+    }
   };
-  document.addEventListener('pointerdown', unlock, { capture:true, passive:true });
-  document.addEventListener('touchend', unlock, { capture:true, passive:true });
-  document.addEventListener('click', unlock, true);
-  document.addEventListener('keydown', unlock, true);
+
+  slider.addEventListener('input', changeVolume);
+  slider.addEventListener('change', changeVolume);
+  slider.addEventListener('pointerdown', (event) => event.stopPropagation());
+  slider.addEventListener('touchstart', (event) => event.stopPropagation(), { passive: true });
+
+  audio.addEventListener('ended', advance);
+
+  // iPhone/Safari: start on first interaction OUTSIDE the music player.
+  const unlockFromCourse = (event) => {
+    if (control.contains(event.target)) return;
+    if (muted || volume === 0 || !audio.paused) return;
+    void playNow();
+  };
+
+  document.addEventListener('pointerdown', unlockFromCourse, { capture: true, passive: true });
+  document.addEventListener('touchend', unlockFromCourse, { capture: true, passive: true });
+  document.addEventListener('click', unlockFromCourse, true);
+  document.addEventListener('keydown', unlockFromCourse, true);
 
   loadTrack(false);
 })();
