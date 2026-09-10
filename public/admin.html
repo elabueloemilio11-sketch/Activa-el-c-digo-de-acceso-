@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Administración · Abuelo Emilio Academy</title>
+  <link rel="stylesheet" href="/assets/styles.css">
+  <style>
+    .generator-card{margin:0 0 22px;padding:22px;border:1px solid rgba(243,201,109,.28);
+      background:linear-gradient(135deg,rgba(243,201,109,.08),rgba(255,255,255,.015));border-radius:18px}
+    .generator-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:end}
+    .generator-row label{grid-column:1/-1;margin:0 0 2px}
+    .generator-row input{min-width:0}
+    .generated-result{margin-top:16px;padding:16px;border:1px solid #30333a;border-radius:14px;background:#0c0e11}
+    .generated-code{display:block;margin:8px 0 12px;font-size:22px;font-weight:900;letter-spacing:.08em;word-break:break-all;color:#f3c96d}
+    .generated-actions{display:flex;gap:8px;flex-wrap:wrap}
+    @media(max-width:700px){
+      .generator-card{padding:17px}
+      .generator-row{grid-template-columns:1fr}
+      .generator-row label{grid-column:auto}
+      .generator-row button{width:100%}
+      .generated-code{font-size:18px}
+      .generated-actions button{width:100%}
+    }
+  </style>
+  <script src="/assets/admin.js" defer></script>
+</head>
+<body>
+  <main class="admin-shell">
+    <header class="admin-header">
+      <a class="brand" href="/admin"><span class="brand-mark">A</span><span>ABUELO EMILIO <b>ADMIN</b></span></a>
+      <button id="admin-logout" class="text-button" type="button" hidden>Cerrar sesión</button>
+    </header>
+
+    <section id="admin-login" class="card auth-card compact-card">
+      <div class="eyebrow">PANEL PROTEGIDO</div>
+      <h1>Administración</h1>
+      <form id="admin-login-form">
+        <label for="admin-user">Usuario</label>
+        <input id="admin-user" autocomplete="username" required>
+        <label for="admin-password">Contraseña</label>
+        <input id="admin-password" type="password" autocomplete="current-password" required>
+        <button class="primary" type="submit">ENTRAR</button>
+      </form>
+      <p id="admin-login-message" class="message" role="status"></p>
+    </section>
+
+    <section id="admin-panel" hidden>
+      <div class="admin-toolbar">
+        <div>
+          <div class="eyebrow">LICENCIAS</div>
+          <h1>Control de accesos</h1>
+        </div>
+        <form id="admin-search-form" class="search-form">
+          <input id="admin-search" type="search" placeholder="Email u order ID">
+          <button class="secondary" type="submit">Buscar</button>
+        </form>
+      </div>
+
+      <section class="generator-card">
+        <div class="eyebrow">NUEVO ACCESO</div>
+        <h2 style="margin:6px 0 14px">Generar código</h2>
+        <form id="code-generator-form" class="generator-row">
+          <label for="generator-email">Email del comprador</label>
+          <input id="generator-email" type="email" autocomplete="email" placeholder="cliente@email.com" required>
+          <button id="generator-submit" class="primary" type="submit">+ GENERAR CÓDIGO</button>
+        </form>
+        <div id="generated-result" class="generated-result" hidden>
+          <div class="muted small">CÓDIGO CREADO PARA <strong id="generated-email"></strong></div>
+          <code id="generated-code" class="generated-code"></code>
+          <div class="generated-actions">
+            <button id="copy-generated-code" class="primary" type="button">COPIAR CÓDIGO</button>
+            <button id="copy-access-data" class="secondary" type="button">COPIAR CÓDIGO + ENLACE</button>
+          </div>
+        </div>
+      </section>
+
+      <p id="admin-message" class="message" role="status"></p>
+      <div class="admin-grid">
+        <section class="card table-card">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Comprador</th><th>Pedido</th><th>Estado</th><th>Disp.</th><th>Riesgo</th></tr></thead>
+              <tbody id="access-table"></tbody>
+            </table>
+          </div>
+        </section>
+        <aside id="access-detail" class="card detail-card">
+          <p class="muted">Selecciona un acceso para ver y gestionar sus dispositivos.</p>
+        </aside>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
