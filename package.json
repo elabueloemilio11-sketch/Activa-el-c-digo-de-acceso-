@@ -12,7 +12,7 @@
     "start": "node src/server.js",
     "migrate": "node scripts/migrate.js",
     "register:webhooks": "node scripts/register-webhooks.js",
-    "test": "node --test",
+    "test": "node --test test/*.test.js",
     "check": "node --check src/server.js && node --check src/app.js && node --test"
   },
   "dependencies": {
