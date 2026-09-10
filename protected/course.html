@@ -245,7 +245,37 @@
     }
   </style>
 
+
+  <style>
+    .academy-music{
+      position:fixed;right:18px;bottom:18px;z-index:50;
+      display:flex;align-items:center;gap:10px;
+      padding:10px 12px;border:1px solid rgba(243,201,109,.34);
+      border-radius:16px;background:rgba(9,10,13,.92);
+      box-shadow:0 14px 40px rgba(0,0,0,.36);
+      backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+    }
+    .academy-music button{
+      width:40px;height:40px;border:1px solid rgba(243,201,109,.38);
+      border-radius:12px;background:#111318;color:#f3c96d;
+      font-size:17px;cursor:pointer;
+    }
+    .academy-music-meta{display:grid;gap:2px;min-width:92px}
+    .academy-music-meta b{font-size:10px;letter-spacing:.12em;color:#f3c96d}
+    .academy-music-meta span{font-size:9px;color:#969ba5}
+    .academy-music input[type="range"]{width:92px;accent-color:#f3c96d}
+    @media(max-width:700px){
+      .academy-music{
+        right:12px;bottom:12px;left:12px;
+        justify-content:center;padding:10px 12px;
+      }
+      .academy-music-meta{min-width:0;flex:1}
+      .academy-music input[type="range"]{width:110px;max-width:32vw}
+    }
+  </style>
+
   <script src="/academy/assets/course.js" defer></script>
+  <script src="/assets/academy-music.js" defer></script>
 </head>
 <body class="academy-body">
   <div class="academy-shell">
@@ -304,6 +334,17 @@
     <div class="dialog-head"><div><p class="eyebrow">SEGURIDAD</p><h2>Tus dispositivos</h2></div><button data-close-dialog="devices-dialog" class="dialog-close" type="button" aria-label="Cerrar">×</button></div>
     <div id="course-device-list" class="device-list"><p class="muted">Cargando…</p></div>
   </dialog>
+
+
+  <audio id="academy-study-audio" preload="metadata"></audio>
+  <div class="academy-music" id="academy-music-control" aria-label="Música de estudio">
+    <button id="academy-music-toggle" type="button" aria-label="Activar o silenciar música">♫</button>
+    <div class="academy-music-meta">
+      <b>JAZZ DE ESTUDIO</b>
+      <span id="academy-music-status">Volumen suave · 10%</span>
+    </div>
+    <input id="academy-music-volume" type="range" min="0" max="100" value="10" step="1" aria-label="Volumen de la música">
+  </div>
 
   <div id="course-toast" class="academy-toast" role="status" aria-live="polite" hidden></div>
   <div id="celebration" class="academy-celebration" aria-hidden="true" hidden>
