@@ -1,10 +1,12 @@
 import { buildApp } from './app.js';
 import { loadConfig } from './config.js';
 import { directAccessRoutes } from './routes/direct-access.js';
+import { musicAssetRoutes } from './routes/music-assets.js';
 
 const config = loadConfig();
 const app = await buildApp({ config });
 await directAccessRoutes(app);
+await musicAssetRoutes(app);
 
 const shutdown = async (signal) => {
   app.log.info({ signal }, 'Graceful shutdown started');
