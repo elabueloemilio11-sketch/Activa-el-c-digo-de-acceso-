@@ -245,34 +245,61 @@
     }
   </style>
 
-
   <style>
     .academy-music{
       position:fixed;right:18px;bottom:18px;z-index:50;
-      display:flex;align-items:center;gap:10px;
-      padding:10px 12px;border:1px solid rgba(243,201,109,.34);
-      border-radius:16px;background:rgba(9,10,13,.92);
-      box-shadow:0 14px 40px rgba(0,0,0,.36);
-      backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+      width:min(390px,calc(100vw - 36px));
+      display:grid;grid-template-columns:48px 1fr auto;align-items:center;gap:12px;
+      padding:12px 14px;border:1px solid rgba(243,201,109,.24);
+      border-radius:20px;
+      background:linear-gradient(145deg,rgba(18,19,23,.96),rgba(8,9,12,.96));
+      box-shadow:0 18px 55px rgba(0,0,0,.52),inset 0 1px 0 rgba(255,255,255,.04);
+      backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
     }
     .academy-music button{
-      width:40px;height:40px;border:1px solid rgba(243,201,109,.38);
-      border-radius:12px;background:#111318;color:#f3c96d;
-      font-size:17px;cursor:pointer;
+      width:48px;height:48px;border:1px solid rgba(243,201,109,.34);
+      border-radius:15px;background:linear-gradient(145deg,#17191f,#0f1115);
+      color:#f3c96d;font-size:19px;font-weight:900;cursor:pointer;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
     }
-    .academy-music-meta{display:grid;gap:2px;min-width:92px}
-    .academy-music-meta b{font-size:10px;letter-spacing:.12em;color:#f3c96d}
-    .academy-music-meta span{font-size:9px;color:#969ba5}
-    .academy-music input[type="range"]{width:92px;accent-color:#f3c96d}
+    .academy-music-main{min-width:0;display:grid;gap:6px}
+    .academy-music-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+    .academy-music-meta{min-width:0;display:grid;gap:2px}
+    .academy-music-meta b{font-size:10px;letter-spacing:.16em;color:#f3c96d}
+    .academy-music-meta span{font-size:10px;color:#9da2ad;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .academy-music-volume{
+      flex:0 0 auto;min-width:42px;padding:5px 7px;border-radius:999px;
+      border:1px solid rgba(243,201,109,.22);background:rgba(243,201,109,.08);
+      color:#f3c96d;font-size:10px;font-weight:900;text-align:center
+    }
+    .academy-music-range{
+      display:flex;align-items:center;gap:8px
+    }
+    .academy-music-range span{font-size:11px;color:#737985}
+    .academy-music input[type="range"]{
+      appearance:none;-webkit-appearance:none;width:100%;height:4px;border-radius:999px;
+      background:linear-gradient(90deg,#f3c96d var(--music-fill,15%),#2c3038 var(--music-fill,15%));
+      outline:none
+    }
+    .academy-music input[type="range"]::-webkit-slider-thumb{
+      -webkit-appearance:none;width:16px;height:16px;border-radius:50%;
+      background:#f7d77f;border:2px solid #0b0d11;box-shadow:0 0 0 2px rgba(243,201,109,.22)
+    }
+    .academy-music-next{
+      width:38px!important;height:38px!important;border-radius:12px!important;
+      font-size:24px!important;line-height:1!important
+    }
     @media(max-width:700px){
       .academy-music{
-        right:12px;bottom:12px;left:12px;
-        justify-content:center;padding:10px 12px;
+        left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));
+        width:auto;grid-template-columns:46px 1fr auto;padding:11px 12px;border-radius:18px
       }
-      .academy-music-meta{min-width:0;flex:1}
-      .academy-music input[type="range"]{width:110px;max-width:32vw}
+      .academy-music button{width:46px;height:46px}
+      .academy-music-meta b{font-size:9px}
+      .academy-music-meta span{font-size:9px}
     }
   </style>
+
 
   <script src="/academy/assets/course.js" defer></script>
   <script src="/assets/academy-music.js" defer></script>
@@ -336,15 +363,26 @@
   </dialog>
 
 
+  
   <audio id="academy-study-audio" preload="metadata"></audio>
   <div class="academy-music" id="academy-music-control" aria-label="Música de estudio">
     <button id="academy-music-toggle" type="button" aria-label="Activar o silenciar música">♫</button>
-    <div class="academy-music-meta">
-      <b>JAZZ DE ESTUDIO</b>
-      <span id="academy-music-status">Volumen suave · 10%</span>
+    <div class="academy-music-main">
+      <div class="academy-music-top">
+        <div class="academy-music-meta">
+          <b>JAZZ DE ESTUDIO</b>
+          <span id="academy-music-status">Preparado para reproducir</span>
+        </div>
+        <span class="academy-music-volume" id="academy-music-percent">15%</span>
+      </div>
+      <div class="academy-music-range">
+        <span>−</span>
+        <input id="academy-music-volume" type="range" min="0" max="100" value="15" step="1" aria-label="Volumen de la música">
+        <span>+</span>
+      </div>
     </div>
-    <input id="academy-music-volume" type="range" min="0" max="100" value="10" step="1" aria-label="Volumen de la música">
   </div>
+
 
   <div id="course-toast" class="academy-toast" role="status" aria-live="polite" hidden></div>
   <div id="celebration" class="academy-celebration" aria-hidden="true" hidden>
