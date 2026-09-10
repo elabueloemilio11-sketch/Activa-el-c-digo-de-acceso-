@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Acceso · Abuelo Emilio Academy</title>
+  <link rel="stylesheet" href="/assets/styles.css">
+  <script src="/assets/access.js?v=3" defer></script>
+</head>
+<body>
+  <main class="auth-shell">
+    <a class="brand" href="/access" aria-label="Abuelo Emilio Academy">
+      <span class="brand-mark">A</span>
+      <span>ABUELO EMILIO <b>ACADEMY</b></span>
+    </a>
+
+    <section class="card auth-card">
+      <div class="eyebrow">ACCESO SEGURO</div>
+
+      <div id="step-code" class="flow-step is-active">
+        <h1>Introduce tu código de acceso</h1>
+        <p class="muted">Introduce tu código y entrarás directamente en Abuelo Emilio Academy.</p>
+
+        <form id="code-form" novalidate>
+          <label for="access-code">Código de acceso</label>
+          <input
+            id="access-code"
+            name="code"
+            class="code-input"
+            inputmode="text"
+            autocomplete="off"
+            autocapitalize="characters"
+            placeholder="AE-XXXX-XXXX-XXXX"
+            maxlength="17"
+            required
+          >
+          <button class="primary" type="submit">ENTRAR EN LA ACADEMY</button>
+        </form>
+
+        <div class="divider"><span>o</span></div>
+        <p class="center muted small">¿Todavía no tienes acceso?</p>
+        <a id="checkout-link" class="secondary link-button" href="#">
+          COMPRA TU CÓDIGO DE ACCESO DE POR VIDA
+        </a>
+      </div>
+
+      <p id="message" class="message" role="status" aria-live="polite"></p>
+    </section>
+
+    <div class="security-note">
+      <span>◆</span>
+      <p>
+        <strong>1 licencia = 1 comprador.</strong><br>
+        Hasta 2 dispositivos y 2 sesiones activas.
+      </p>
+    </div>
+  </main>
+</body>
+</html>
