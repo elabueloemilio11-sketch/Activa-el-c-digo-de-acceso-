@@ -247,20 +247,52 @@
 
 
   <style>
-    .academy-music{position:fixed;right:18px;bottom:18px;z-index:50;display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid rgba(243,201,109,.34);border-radius:16px;background:rgba(9,10,13,.94);box-shadow:0 14px 40px rgba(0,0,0,.36);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
-    .academy-music button{width:40px;height:40px;border:1px solid rgba(243,201,109,.38);border-radius:12px;background:#111318;color:#f3c96d;font-size:17px;cursor:pointer;-webkit-tap-highlight-color:transparent}
-    .academy-music-meta{display:grid;gap:2px;min-width:130px}.academy-music-meta b{font-size:10px;letter-spacing:.12em;color:#f3c96d}.academy-music-meta span{font-size:9px;color:#969ba5}.academy-music input[type=range]{width:92px;accent-color:#f3c96d}#academy-music-close{display:none}
+    /* Study music player — isolated IDs to avoid theme/mobile CSS collisions */
+    #academy-music-launcher{
+      position:fixed!important;right:14px!important;top:60%!important;transform:translateY(-50%)!important;
+      z-index:9999!important;width:46px!important;height:46px!important;min-width:46px!important;min-height:46px!important;
+      display:none!important;align-items:center!important;justify-content:center!important;padding:0!important;margin:0!important;
+      border:1px solid rgba(243,201,109,.45)!important;border-radius:50%!important;background:#111318!important;
+      color:#f3c96d!important;font-size:20px!important;line-height:1!important;box-shadow:0 10px 30px rgba(0,0,0,.4)!important;
+      -webkit-tap-highlight-color:transparent!important;
+    }
+    #academy-music-control{
+      position:fixed!important;right:18px!important;bottom:18px!important;z-index:9998!important;
+      display:flex!important;align-items:center!important;gap:8px!important;width:auto!important;height:auto!important;
+      max-width:360px!important;padding:9px 10px!important;margin:0!important;overflow:visible!important;
+      border:1px solid rgba(243,201,109,.34)!important;border-radius:16px!important;background:rgba(9,10,13,.96)!important;
+      box-shadow:0 14px 40px rgba(0,0,0,.36)!important;backdrop-filter:blur(12px)!important;-webkit-backdrop-filter:blur(12px)!important;
+    }
+    #academy-music-control button{
+      flex:0 0 auto!important;width:38px!important;height:38px!important;min-width:38px!important;min-height:38px!important;
+      padding:0!important;margin:0!important;border:1px solid rgba(243,201,109,.38)!important;border-radius:11px!important;
+      background:#111318!important;color:#f3c96d!important;font-size:17px!important;line-height:1!important;
+    }
+    #academy-music-control .academy-music-meta{display:grid!important;gap:2px!important;min-width:120px!important;max-width:150px!important;margin:0!important}
+    #academy-music-control .academy-music-meta b{font-size:10px!important;line-height:1.2!important;letter-spacing:.12em!important;color:#f3c96d!important;white-space:nowrap!important}
+    #academy-music-control .academy-music-meta span{font-size:10px!important;line-height:1.25!important;color:#b0b4bd!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+    #academy-music-volume{display:block!important;width:86px!important;min-width:72px!important;max-width:86px!important;margin:0!important;padding:0!important;accent-color:#f3c96d!important}
+    #academy-music-percent{display:inline!important;color:#f3c96d!important;font-weight:800!important}
+    #academy-music-close{display:none!important}
+
     @media(max-width:700px){
-      .academy-music{left:auto!important;right:12px!important;bottom:calc(18px + env(safe-area-inset-bottom))!important;width:48px!important;height:48px!important;padding:0!important;border-radius:50%!important;overflow:visible!important;justify-content:center!important;transition:width .18s ease,border-radius .18s ease,padding .18s ease!important}
-      .academy-music:not(.music-open)>*:not(#academy-music-toggle):not(audio){display:none!important}.academy-music:not(.music-open) #academy-music-toggle{width:48px!important;height:48px!important;border-radius:50%!important;font-size:20px!important}
-      .academy-music.music-open{width:min(342px,calc(100vw - 24px))!important;height:auto!important;min-height:64px!important;padding:8px!important;border-radius:18px!important;justify-content:flex-start!important;gap:7px!important}
-      .academy-music.music-open .academy-music-meta{display:grid!important;min-width:0!important;flex:1!important}.academy-music.music-open .academy-music-meta span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:135px}.academy-music.music-open input[type=range]{display:block!important;width:72px!important;max-width:72px!important}
-      .academy-music.music-open #academy-music-close{display:block!important;width:34px!important;height:34px!important;border-radius:10px!important}.academy-music.music-open #academy-music-toggle,.academy-music.music-open #academy-music-next{width:38px!important;height:38px!important;flex:0 0 38px!important}
+      #academy-music-launcher{display:flex!important}
+      #academy-music-control{
+        display:none!important;right:12px!important;left:auto!important;top:calc(60% - 34px)!important;bottom:auto!important;
+        transform:translateY(-50%)!important;width:min(330px,calc(100vw - 74px))!important;max-width:330px!important;
+        min-height:58px!important;padding:8px!important;border-radius:16px!important;gap:7px!important;
+      }
+      #academy-music-control.is-open{display:flex!important}
+      #academy-music-control .academy-music-meta{min-width:0!important;max-width:118px!important;flex:1 1 auto!important}
+      #academy-music-control .academy-music-meta span{max-width:118px!important}
+      #academy-music-volume{width:64px!important;min-width:54px!important;max-width:64px!important;flex:0 1 64px!important}
+      #academy-music-close{display:block!important}
+      #academy-music-control button{width:34px!important;height:34px!important;min-width:34px!important;min-height:34px!important}
     }
   </style>
 
   <script src="/academy/assets/course.js" defer></script>
-  <script src="/assets/academy-music.js" defer></script>
+  <script src="/assets/academy-music.js?v=6" defer></script>
 </head>
 <body class="academy-body">
   <div class="academy-shell">
@@ -322,13 +354,16 @@
 
 
   <audio id="academy-study-audio" preload="metadata"></audio>
-  <div class="academy-music" id="academy-music-control" aria-label="Música de estudio">
-    <button id="academy-music-toggle" type="button" aria-label="Activar o silenciar música">♫</button>
+  <button id="academy-music-launcher" type="button" aria-label="Abrir música de estudio">♫</button>
+  <div id="academy-music-control" aria-label="Música de estudio">
+    <button id="academy-music-toggle" type="button" aria-label="Reproducir o pausar música">♫</button>
     <div class="academy-music-meta">
       <b>JAZZ DE ESTUDIO</b>
-      <span id="academy-music-status">Volumen suave · 10%</span>
+      <span><span id="academy-music-status">Cosmic Focus 432Hz</span> · <span id="academy-music-percent">10%</span></span>
     </div>
     <input id="academy-music-volume" type="range" min="0" max="100" value="10" step="1" aria-label="Volumen de la música">
+    <button id="academy-music-next" type="button" aria-label="Siguiente canción">›</button>
+    <button id="academy-music-close" type="button" aria-label="Cerrar reproductor">×</button>
   </div>
 
   <div id="course-toast" class="academy-toast" role="status" aria-live="polite" hidden></div>
